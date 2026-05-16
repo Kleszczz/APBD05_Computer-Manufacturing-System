@@ -3,6 +3,6 @@
 public class PCComponent
 {
     public int PCId { get; set; }
-    public string ComponentCode { get; set; }
+    public string ComponentCode { get; set; }  = string.Empty;
     public int Amount { get; set; }
 }

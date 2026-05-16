@@ -3,7 +3,7 @@
 public class PCDto
 {
     public int Id { get; set; }
-    public string Name { get; set; } = String.Empty;
+    public string Name { get; set; } = string.Empty;
     public float Weight { get; set; } = float.NaN;
     public int Warranty { get; set; }
     public DateTime CreatedAt { get; set; }
