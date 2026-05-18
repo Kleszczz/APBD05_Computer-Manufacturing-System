@@ -5,8 +5,8 @@ namespace APBD05_Computer_Manufacturing_System.Services;
 public interface IDbService
 {
     Task<IEnumerable<PCDto>> GetAllPCsAsync();
-    Task<IEnumerable<ComponentDto>> GetPCWithComponentsAsync(int pcId);
+    Task<PCWithComponentsDto?> GetPCWithComponentsAsync(int pcId);
     Task<PCDto> CreatePcAsync(PCDto pcDto);
-    Task<bool> UpdatePcByIdAsync(int pcId,  PCDto pcDto);
+    Task<bool> UpdatePcByIdAsync(int pcId, PCDto pcDto);
     Task<bool> DeletePcByIdAsync(int pcId);
 }

@@ -38,10 +38,53 @@ public class PCService : IDbService
         return pcs;
     }
 
-    //TODO: SKONCZ TO, POCZEKAC NA ODP. PROWADZACEGO.
-    public async Task<IEnumerable<ComponentDto>> GetPCWithComponentsAsync(int pcId)
+
+    public async Task<PCWithComponentsDto?> GetPCWithComponentsAsync(int pcId)
     {
-        throw new NotImplementedException();
+        var pc = await _context.PCs
+            .Include(p => p.PCComponents)
+            .ThenInclude(pcc => pcc.Component)
+            .ThenInclude(c => c.Manufacturer)
+            .Include(p => p.PCComponents)
+            .ThenInclude(pcc => pcc.Component)
+            .ThenInclude(c => c.Type)
+            .FirstOrDefaultAsync(p => p.Id == pcId);
+
+        if (pc is null)
+            return null;
+
+        return new PCWithComponentsDto
+        {
+            Id = pc.Id,
+            Name = pc.Name,
+            Weight = pc.Weight,
+            Warranty = pc.Warranty,
+            CreatedAt = pc.CreatedAt,
+            Stock = pc.Stock,
+            Components = pc.PCComponents.Select(pcc => new PCComponentDto
+            {
+                Amount = pcc.Amount,
+                Component = new ComponentDto
+                {
+                    Code = pcc.Component.Code,
+                    Name = pcc.Component.Name,
+                    Description = pcc.Component.Description,
+                    Manufacturer = new ComponentManufacturerDto
+                    {
+                        Id = pcc.Component.Manufacturer.Id,
+                        Abbreviation = pcc.Component.Manufacturer.Abbreviation,
+                        FullName = pcc.Component.Manufacturer.FullName,
+                        FoundationDate = pcc.Component.Manufacturer.FoundationDate
+                    },
+                    Type = new ComponentTypeDto
+                    {
+                        Id = pcc.Component.Type.Id,
+                        Abbreviation = pcc.Component.Type.Abbreviation,
+                        Name = pcc.Component.Type.Name
+                    }
+                }
+            }).ToList()
+        };
     }
 
     // POST api/pcs
@@ -55,10 +98,10 @@ public class PCService : IDbService
             CreatedAt = pcDto.CreatedAt,
             Stock = pcDto.Stock
         };
- 
+
         await _context.PCs.AddAsync(pc);
         await _context.SaveChangesAsync();
- 
+
         return new PCDto
         {
             Id = pc.Id,
