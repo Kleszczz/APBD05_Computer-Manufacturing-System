@@ -36,7 +36,9 @@ public class PCController : ControllerBase
         var pc = await _dbService.GetPCWithComponentsAsync(id);
 
         if (pc is null)
+        {
             return NotFound();
+        }
 
         return Ok(pc);
     }
@@ -45,7 +47,8 @@ public class PCController : ControllerBase
     public async Task<IActionResult> CreatePcAsync([FromBody] PCDto dto)
     {
         var created = await _dbService.CreatePcAsync(dto);
-        return CreatedAtAction(nameof(GetPCWithComponentsAsync), new { id = created.Id }, created);
+        //return CreatedAtAction(nameof(GetPCWithComponentsAsync), new { id = created.Id }, created);
+        return Created($"api/pcs/{created.Id}/components", created);
     }
 
 
@@ -55,8 +58,24 @@ public class PCController : ControllerBase
         var updated = await _dbService.UpdatePcByIdAsync(id, pcDto);
 
         if (!updated)
+        {
             return NotFound();
+        }
 
         return Ok();
     }
+    
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletePcByIdAsync(int id)
+    {
+        var deleted = await _dbService.DeletePcByIdAsync(id);
+
+        if (!deleted)
+        {
+            return NotFound();
+        }
+
+        return NoContent();
+    }
+    
 }
