@@ -2,10 +2,10 @@
 
 public class ComponentDto
 {
-    public int Id { get; set; }
-    public string Abbreviation { get; set; } = string.Empty;
+    public string Code { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
     public string Name { get; set; } = string.Empty;
     
-    public int ComponentManufacturersId { get; set; }
-    public int ComponentTypesId { get; set; }
+    public ComponentManufacturerDto Manufacturer { get; set; } = null!;
+    public ComponentTypeDto Type { get; set; } = null!;
 }

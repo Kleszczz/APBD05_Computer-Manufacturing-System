@@ -1,8 +1,7 @@
 ﻿namespace APBD05_Computer_Manufacturing_System.DTOs;
 
-public class PCComponent
+public class PCComponentDto
 {
-    public int PCId { get; set; }
-    public string ComponentCode { get; set; }  = string.Empty;
     public int Amount { get; set; }
+    public ComponentDto Component { get; set; } = null!;
 }
